@@ -67,7 +67,7 @@ def shell(c):
 @task
 def dbshell(c):
     """start a dbshell"""
-    os.system('docker-compose run workflow python manage.py dbshell')
+    os.system('docker-compose run workflow psql -h db -U postgres postgres')
 
 
 @task(help={'filename': 'path to the file containing the test module',
