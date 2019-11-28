@@ -76,7 +76,7 @@ def run_tests(c, filename=None, substring=None):
     """run the test suite"""
     env_opts = ''
     dcrun = f'docker-compose run {env_opts} workflow'
-    cmd = f'{dcrun} py.test -rf'
+    cmd = f'{dcrun} pipenv run py.test -rf'
     if substring:
         cmd += f' -k {substring}'
     if filename:
