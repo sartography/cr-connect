@@ -16,6 +16,7 @@ services:
         build: ../cr-connect-frontend
         volumes:
             - ../cr-connect-frontend:/crc-frontend
+            - /crc-frontend/node_modules
         depends_on:
             - db
         ports:
