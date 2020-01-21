@@ -103,15 +103,14 @@ def list_git_references(c):
     c.run('git branch -r')
 
 
-ns = Collection()
-
+# repo maintenance and info
 ns_repo = Collection('repo')
 ns_repo.add_task(clean)
 ns_repo.add_task(list_git_references, 'git-references')
 ns_repo.add_task(prune_git_branches, 'git-prune')
 ns_repo.add_task(list_branches, 'branches')
-ns.add_collection(ns_repo)
 
+# dev constellation admin
 ns_dev = Collection('dev')
 ns_dev.add_task(startenv, 'start')
 ns_dev.add_task(stopenv, 'stop')
@@ -119,21 +118,28 @@ ns_dev.add_task(restartenv, 'restart')
 ns_dev.add_task(buildenv, 'build')
 ns_dev.add_task(showenv, 'show')
 
+# docker maintenance
 ns_docker = Collection('docker')
 ns_docker.add_task(prune_docker, 'clean')
 ns_dev.add_collection(ns_docker)
 
+# crc workflow tasks
 ns_workflow = Collection('workflow')
 ns_workflow.add_task(shell)
 ns_workflow.add_task(run_tests, 'test')
 ns_dev.add_collection(ns_workflow)
 
+# database tasks
 ns_database = Collection('database')
 ns_database.add_task(dbshell, 'shell')
 ns_dev.add_collection(ns_database)
 
+# put dev in env namespace
 ns_env = Collection('env')
 ns_env.add_collection(ns_dev)
 
+# add namespaces to root collection
+ns = Collection()
+ns.add_collection(ns_repo)
 ns.add_collection(ns_env)
 
