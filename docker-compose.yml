@@ -4,6 +4,10 @@ services:
         image: postgres:9.6
         volumes:
             - ./pgdata:/var/lib/postgresql/data
+        environment:
+            - POSTGRES_DB=crc
+            - POSTGRES_USER=crc
+            - POSTGRES_PASSWORD=crc
     workflow:
         build: ../cr-connect-workflow
         environment:
@@ -23,3 +27,11 @@ services:
             - db
         ports:
             - '4200:4200'
+    bpmn:
+        build: ../cr-connect-bpmn
+        volumes:
+            - /crc-bpmn
+        ports:
+            - '5001:80'
+        depends_on:
+            - db
