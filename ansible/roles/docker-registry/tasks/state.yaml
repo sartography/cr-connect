@@ -1,0 +1,52 @@
+- name: stop docker repo
+  shell: docker stop docker_registry
+  tags:
+  - stop
+- name: remove any existing containers
+  shell: docker rm docker_registry
+  ignore_errors: yes
+  tags:
+    - start
+- name: ensure dir for htpasswd auth exists
+  file:
+    path: /opt/docker_registry/auth
+    state: directory
+  tags:
+    - start
+- name: create htpasswd file to restrict access to registry
+  shell: >
+            docker run \
+              --entrypoint htpasswd \
+              registry:2 -Bbn \
+              {{auth_user_for_kubernetes__username}} \
+              {{auth_user_for_kubernetes__password}} \
+              > /opt/docker_registry/auth/htpasswd
+  tags:
+    - start
+- name: ensure dir for certs exists
+  file:
+    path: /opt/docker_registry/certs
+    state: directory
+  tags:
+    - start
+- name: copy certs to more docker-friendly location
+  shell: cp -L /etc/letsencrypt/live/{{ docker_registry_server }}/* /opt/docker_registry/certs/
+  tags:
+    - start
+- name: make a cert consumable by docker
+  shell: cat /opt/docker_registry/certs/cert.pem /opt/docker_registry/certs/chain.pem > /opt/docker_registry/certs/domain.crt
+  tags:
+    - start
+- name: start docker registry
+  shell: >
+            docker run -d --name docker_registry --restart=unless-stopped \
+                       -p 5000:5000 \
+                       -v /opt/docker_registry/registry_data:/var/lib/registry \
+                       -v /opt/docker_registry/certs:/certs \
+                       -v /opt/docker_registry/auth:/auth \
+                       -e REGISTRY_HTTP_ADDR=0.0.0.0:5000 \
+                       -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/domain.crt \
+                       -e REGISTRY_HTTP_TLS_KEY=/certs/privkey.pem \
+                       registry:2
+  tags:
+    - start

@@ -1,0 +1,4 @@
+---
+letsencrypt_admin_email: fred@frameworklabs.us
+certificate_domains__docker_registry: docker-registry.crc.sartography.com
+certificate_domains__rancher: rancher.crc.sartography.com

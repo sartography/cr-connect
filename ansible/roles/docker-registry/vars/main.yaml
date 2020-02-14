@@ -1,0 +1,4 @@
+---
+auth_user_for_kubernetes__username: k8s
+auth_user_for_kubernetes__password: k8s4ever
+docker_registry_server: docker-registry.crc.sartography.com

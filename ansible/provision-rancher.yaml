@@ -1,0 +1,10 @@
+---
+- hosts: web
+  become: yes
+  become_user: root
+  tasks:
+
+    - name: Deploy Docker
+      import_role:
+        name: docker
+        tasks_from: deploy.yaml

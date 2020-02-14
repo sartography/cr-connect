@@ -1,0 +1,37 @@
+---
+- name: update packages if the last one is more than a day ago
+  apt:
+    update_cache: yes
+    cache_valid_time: 86400
+
+- name: install packages needed for docker and ansible remote docker control
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+      - software-properties-common
+
+- name: add universe repository for certbot
+  shell: add-apt-repository -y universe
+
+- name: add certbot ppa repository for certbot
+  shell: add-apt-repository -y ppa:certbot/certbot
+
+- name: update packages
+  apt:
+    update_cache: yes
+
+- name: install packages for certbot
+  apt:
+    name: "{{ packages }}"
+  vars:
+    packages:
+      - certbot
+      - python-certbot-nginx
+
+- name: install cert update crontab
+  cron:
+    name: update certificate
+    minute: "0"
+    hour: "0"
+    job: "certbot renew"

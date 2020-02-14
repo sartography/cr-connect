@@ -1,0 +1,30 @@
+- name: stop rancher
+  shell: docker stop crc_rancher
+  tags:
+  - stop
+- name: remove any existing containers
+  shell: docker rm crc_rancher
+  ignore_errors: yes
+  tags:
+    - start
+- name: ensure dir for certs exists
+  file:
+    path: /opt/rancher-certs
+    state: directory
+  tags:
+    - start
+- name: copy certs to more docker-friendly location
+  shell: cp -L /etc/letsencrypt/live/rancher.crc.sartography.com/* /opt/rancher-certs/
+  tags:
+    - start
+- name: start rancher
+  shell: >
+            docker run -d --name crc_rancher --restart=unless-stopped \
+                       -p 80:80 -p 443:443 \
+                       -v /opt/rancher:/var/lib/rancher \
+                       -v /opt/rancher-certs/fullchain.pem:/etc/rancher/ssl/cert.pem \
+                       -v /opt/rancher-certs/privkey.pem:/etc/rancher/ssl/key.pem \
+                       rancher/rancher \
+                       --no-cacerts
+  tags:
+    - start

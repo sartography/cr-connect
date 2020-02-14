@@ -1,0 +1,12 @@
+---
+- hosts: admin
+  become: yes
+  become_user: root
+  tasks:
+
+    - name: set docker registry state = started
+      import_role:
+        name: docker-registry
+        tasks_from: state.yaml
+      tags:
+        - start

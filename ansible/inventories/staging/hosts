@@ -1,0 +1,5 @@
+[admin]
+crc_rancher ansible_host=34.237.245.238 ansible_user=ubuntu
+
+[localhost]
+localhost ansible_python_interpreter=python

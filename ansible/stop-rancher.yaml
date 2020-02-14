@@ -1,0 +1,12 @@
+---
+- hosts: admin
+  become: yes
+  become_user: root
+  tasks:
+
+    - name: set rancher state = stopped
+      import_role:
+        name: rancher
+        tasks_from: state.yaml
+      tags:
+        - stop

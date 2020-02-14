@@ -1,0 +1,15 @@
+---
+- hosts: admin
+  become: yes
+  become_user: root
+  serial: 1
+  tasks:
+    - name: install certbot
+      import_role:
+        name: certbot
+        tasks_from: deploy.yaml
+    - name: create new cert
+      include_role:
+        name: certbot
+        tasks_from: request-new-rancher-cert.yaml
+

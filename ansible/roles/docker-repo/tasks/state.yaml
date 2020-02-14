@@ -1,0 +1,17 @@
+- name: stop docker repo
+  shell: docker stop docker_repo
+  tags:
+  - stop
+- name: remove any existing containers
+  shell: docker rm docker_repo
+  ignore_errors: yes
+  tags:
+    - start
+- name: start docker repo
+  shell: >
+            docker run -d --name docker_repo --restart=unless-stopped \
+                       -p 5000:5000 \
+                       -v /opt/docker_repo:/var/lib/registry \
+                       registry:2
+  tags:
+    - start

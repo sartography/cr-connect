@@ -1,0 +1,8 @@
+---
+- name: create new cert
+  shell: >
+            /usr/bin/certbot certonly --standalone \
+              -n \
+              --agree-tos \
+              -m {{ letsencrypt_admin_email }} \
+              -d {{ certificate_domains__rancher }}

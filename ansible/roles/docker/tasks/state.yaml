@@ -1,0 +1,13 @@
+- name: stop docker service
+  systemd:
+    state: stopped
+    name: docker
+  tags:
+    - stop
+
+- name: start docker service
+  systemd:
+    state: started
+    name: docker
+  tags:
+    - start
