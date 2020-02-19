@@ -1,0 +1,15 @@
+---
+- hosts: admin
+  become: yes
+  become_user: root
+  tasks:
+
+    - name: Deploy Docker
+      import_role:
+        name: docker
+        tasks_from: deploy.yaml
+
+    - name: Deploy Certbot
+      import_role:
+        name: certbot
+        tasks_from: deploy.yaml
